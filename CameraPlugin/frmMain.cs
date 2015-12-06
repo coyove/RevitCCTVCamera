@@ -27,6 +27,7 @@ namespace CameraPlugin
         public int curMode = 0;
 
         public float zoomRatio = 1;
+        public float globalShift = 0;
 
         public static Autodesk.Revit.DB.Document document;
         public static Dictionary<string, List<Autodesk.Revit.DB.ElementId>> idCouple;
@@ -179,7 +180,7 @@ namespace CameraPlugin
             sfc.LineAlignment = sf.LineAlignment = StringAlignment.Center;
             sfc.Alignment = StringAlignment.Center;
 
-            dc.TranslateTransform(movingPoint.X, movingPoint.Y);
+            dc.TranslateTransform(globalShift + movingPoint.X, globalShift + movingPoint.Y);
             dc.Clear(Color.White);
             dc.SmoothingMode = SmoothingMode.AntiAlias;
             dc.TextRenderingHint = TextRenderingHint.AntiAlias;
@@ -379,7 +380,10 @@ namespace CameraPlugin
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            foreach(var room in rooms)
+            Autodesk.Revit.DB.XYZ _min = null;
+            Autodesk.Revit.DB.XYZ _max = null;
+
+            foreach (var room in rooms)
             {
                 ListViewItem lvt = new ListViewItem(room.Key);
                 lvt.SubItems.Add(room.Value.room.Name);
@@ -389,6 +393,24 @@ namespace CameraPlugin
                 lvt.SubItems.Add(area.ToString("0.000"));
                 lvt.SubItems.Add((calcRoomCoverage(room.Value) / area * 100).ToString("0") + "%");
                 lvRooms.Items.Add(lvt);
+
+                Autodesk.Revit.DB.BoundingBoxXYZ b = room.Value.room.get_BoundingBox(null);
+
+                if(b != null)
+                {
+                    _max = _max == null ? b.Max : Area.max(_max, b.Max);
+                    _min = _min == null ? b.Min : Area.min(_min, b.Min);
+                }
+            }
+
+            double dy = _max.Y - _min.Y;
+            double dx = _max.X - _min.X;
+            double dw = dy > dx ? dy : dx;
+
+            if(dw != 0)
+            {
+                zoomRatio = (int)(500 / dw / 1.5);
+                globalShift = (float)(dw / 2 * zoomRatio * 1.5);
             }
 
             foreach (var cam in cameras)
@@ -667,10 +689,14 @@ namespace CameraPlugin
                 center.Y = (float)cameraCenter.Y;
 
                 Autodesk.Revit.DB.FamilyInstance tmp = _camera as Autodesk.Revit.DB.FamilyInstance;
+                Autodesk.Revit.DB.LocationPoint loc = tmp.Location as Autodesk.Revit.DB.LocationPoint;
+                //cameraPan = tmp.GetTransform().BasisX.AngleOnPlaneTo(
+                //    new Autodesk.Revit.DB.XYZ(1, 0, 0),
+                //    tmp.GetTransform().BasisZ) + Math.PI / 2;
 
-                cameraPan = tmp.GetTransform().BasisX.AngleOnPlaneTo(
-                    new Autodesk.Revit.DB.XYZ(1, 0, 0),
-                    tmp.GetTransform().BasisZ) + Math.PI / 2;
+                cameraPan = 2 * Math.PI - loc.Rotation + Math.PI / 2;
+                while (cameraPan >= 2 * Math.PI) cameraPan -= 2 * Math.PI;
+                while (cameraPan < 0) cameraPan += 2 * Math.PI;
 
                 cameraTilt = _camera.ParametersMap.get_Item("tilt").AsDouble();
 
@@ -683,8 +709,10 @@ namespace CameraPlugin
             vAngle = Math.Atan(_camera.ParametersMap.get_Item("sensor_height").AsDouble() / _camera.ParametersMap.get_Item("focal_length").AsDouble() / 2);
             hAngle = Math.Atan(_camera.ParametersMap.get_Item("sensor_width").AsDouble() / _camera.ParametersMap.get_Item("focal_length").AsDouble() / 2);
 
-            nearDistance = cameraCenter.Z / Math.Tan(vAngle + cameraTilt);
-            farDistance = cameraCenter.Z / Math.Tan(cameraTilt - vAngle);
+            double height = cameraCenter.Z - room.Level.Elevation;
+
+            nearDistance = height / Math.Tan(vAngle + cameraTilt);
+            farDistance = height / Math.Tan(cameraTilt - vAngle);
 
             rightNear = new PointF((float)(Math.Cos(cameraPan - hAngle) * nearDistance) + center.X,
                 (float)(Math.Sin(cameraPan - hAngle) * nearDistance) + center.Y);
