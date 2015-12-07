@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.picRooms = new System.Windows.Forms.PictureBox();
             this.txtDebug = new System.Windows.Forms.TextBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -38,11 +39,11 @@
             this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.roomArea = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.roomCoverage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,18 +53,29 @@
             this.tbTilt = new System.Windows.Forms.TrackBar();
             this.tbPan = new System.Windows.Forms.TrackBar();
             this.lvCameras = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraRoom = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraFOV = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraEv = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cameraCoverage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraSensor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraLens = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.txtHumanHeight = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.menuCamera = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.chooseSensor = new System.Windows.Forms.ToolStripMenuItem();
+            this.chooseLensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picRooms)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTilt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPan)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            this.menuCamera.SuspendLayout();
             this.SuspendLayout();
             // 
             // picRooms
@@ -105,6 +117,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(518, 37);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -140,8 +153,8 @@
             this.colID,
             this.colName,
             this.colLevel,
-            this.columnHeader6,
-            this.columnHeader8});
+            this.roomArea,
+            this.roomCoverage});
             this.lvRooms.FullRowSelect = true;
             this.lvRooms.GridLines = true;
             this.lvRooms.Location = new System.Drawing.Point(6, 31);
@@ -167,18 +180,18 @@
             // 
             this.colLevel.Text = "Ev.";
             // 
-            // columnHeader6
+            // roomArea
             // 
-            this.columnHeader6.Text = "Area";
+            this.roomArea.Text = "Area";
             // 
-            // columnHeader8
+            // roomCoverage
             // 
-            this.columnHeader8.Text = "Coverage";
+            this.roomCoverage.Text = "Coverage";
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textBox1);
-            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.label3);
@@ -196,21 +209,25 @@
             this.tabPage2.Text = "Camera";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // button2
             // 
-            this.textBox1.Location = new System.Drawing.Point(102, 350);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(135, 25);
-            this.textBox1.TabIndex = 23;
+            this.button2.Location = new System.Drawing.Point(6, 407);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(118, 33);
+            this.button2.TabIndex = 26;
+            this.button2.Text = "Edit Name";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label6
+            // button1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 353);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(47, 15);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "Name:";
+            this.button1.Location = new System.Drawing.Point(130, 407);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(118, 33);
+            this.button1.TabIndex = 25;
+            this.button1.Text = "Edit Profile";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // label5
             // 
@@ -294,12 +311,14 @@
             // lvCameras
             // 
             this.lvCameras.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader5,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.cameraCoverage});
+            this.cameraID,
+            this.cameraName,
+            this.cameraRoom,
+            this.cameraFOV,
+            this.cameraEv,
+            this.cameraCoverage,
+            this.cameraSensor,
+            this.cameraLens});
             this.lvCameras.FullRowSelect = true;
             this.lvCameras.GridLines = true;
             this.lvCameras.Location = new System.Drawing.Point(6, 6);
@@ -311,30 +330,99 @@
             this.lvCameras.SelectedIndexChanged += new System.EventHandler(this.lvCameras_SelectedIndexChanged);
             this.lvCameras.DoubleClick += new System.EventHandler(this.lvCameras_DoubleClick);
             // 
-            // columnHeader1
+            // cameraID
             // 
-            this.columnHeader1.Text = "Camera ID";
-            this.columnHeader1.Width = 100;
+            this.cameraID.Text = "Camera ID";
+            this.cameraID.Width = 100;
             // 
-            // columnHeader5
+            // cameraName
             // 
-            this.columnHeader5.Text = "Name";
+            this.cameraName.Text = "Name";
             // 
-            // columnHeader2
+            // cameraRoom
             // 
-            this.columnHeader2.Text = "Inside";
+            this.cameraRoom.Text = "Inside";
             // 
-            // columnHeader3
+            // cameraFOV
             // 
-            this.columnHeader3.Text = "FOV";
+            this.cameraFOV.Text = "FOV";
             // 
-            // columnHeader4
+            // cameraEv
             // 
-            this.columnHeader4.Text = "Ev.";
+            this.cameraEv.Text = "Ev.";
             // 
             // cameraCoverage
             // 
             this.cameraCoverage.Text = "Coverage";
+            // 
+            // cameraSensor
+            // 
+            this.cameraSensor.Text = "Sensor";
+            // 
+            // cameraLens
+            // 
+            this.cameraLens.Text = "Lens";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.btnSave);
+            this.tabPage3.Controls.Add(this.txtHumanHeight);
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(384, 446);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Settings";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(273, 409);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(105, 31);
+            this.btnSave.TabIndex = 26;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // txtHumanHeight
+            // 
+            this.txtHumanHeight.Location = new System.Drawing.Point(155, 6);
+            this.txtHumanHeight.Name = "txtHumanHeight";
+            this.txtHumanHeight.Size = new System.Drawing.Size(223, 25);
+            this.txtHumanHeight.TabIndex = 25;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 9);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(143, 15);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Human height (m):";
+            // 
+            // menuCamera
+            // 
+            this.menuCamera.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuCamera.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chooseSensor,
+            this.chooseLensToolStripMenuItem});
+            this.menuCamera.Name = "contextMenuStrip1";
+            this.menuCamera.Size = new System.Drawing.Size(194, 56);
+            this.menuCamera.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuCamera_ItemClicked);
+            // 
+            // chooseSensor
+            // 
+            this.chooseSensor.Name = "chooseSensor";
+            this.chooseSensor.Size = new System.Drawing.Size(193, 26);
+            this.chooseSensor.Text = "Choose Sensor";
+            // 
+            // chooseLensToolStripMenuItem
+            // 
+            this.chooseLensToolStripMenuItem.Name = "chooseLensToolStripMenuItem";
+            this.chooseLensToolStripMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.chooseLensToolStripMenuItem.Text = "Choose Lens";
             // 
             // frmMain
             // 
@@ -359,6 +447,9 @@
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbTilt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPan)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.menuCamera.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -379,21 +470,30 @@
         private System.Windows.Forms.TrackBar tbTilt;
         private System.Windows.Forms.TrackBar tbPan;
         private System.Windows.Forms.ListView lvCameras;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader cameraID;
+        private System.Windows.Forms.ColumnHeader cameraName;
+        private System.Windows.Forms.ColumnHeader cameraRoom;
+        private System.Windows.Forms.ColumnHeader cameraFOV;
+        private System.Windows.Forms.ColumnHeader cameraEv;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblPan;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader roomArea;
         private System.Windows.Forms.ColumnHeader cameraCoverage;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader roomCoverage;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox txtHumanHeight;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.ContextMenuStrip menuCamera;
+        private System.Windows.Forms.ToolStripMenuItem chooseSensor;
+        private System.Windows.Forms.ColumnHeader cameraSensor;
+        private System.Windows.Forms.ToolStripMenuItem chooseLensToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader cameraLens;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

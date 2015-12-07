@@ -63,11 +63,12 @@
   <ItemGroup>
     <Compile Include="Area.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="frmEdit.cs">
+    <Compile Include="CameraConfig.cs" />
+    <Compile Include="frmInput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmEdit.Designer.cs">
-      <DependentUpon>frmEdit.cs</DependentUpon>
+    <Compile Include="frmInput.Designer.cs">
+      <DependentUpon>frmInput.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -83,8 +84,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="frmEdit.resx">
-      <DependentUpon>frmEdit.cs</DependentUpon>
+    <EmbeddedResource Include="frmInput.resx">
+      <DependentUpon>frmInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

@@ -29,10 +29,15 @@ namespace CameraPlugin
         public float zoomRatio = 1;
         public float globalShift = 0;
 
+        public static float unitConvert = 1;
+
         public static Autodesk.Revit.DB.Document document;
         public static Dictionary<string, List<Autodesk.Revit.DB.ElementId>> idCouple;
 
         private double tmpOldPan;
+
+        private List<CameraConfig.SensorType> lcs;
+        private List<CameraConfig.LensType> lcl;
 
         public void addCamera(Autodesk.Revit.DB.Architecture.Room r, Autodesk.Revit.DB.Element e)
         {
@@ -128,7 +133,7 @@ namespace CameraPlugin
                     {
                         cbp.Add(new Point((int)(pf.X * r.zoomRatioX), (int)(pf.Y * r.zoomRatioY)));
                     }
-                    cbp.Add(new Point(cx, cy));
+                    //cbp.Add(new Point(cx, cy));
 
                     dc.DrawPolygon(dirPen, cbp.ToArray());
 
@@ -233,7 +238,7 @@ namespace CameraPlugin
                 {
                     cbp.Add(new Point((int)(pf.X * zoomRatio), (int)(pf.Y * -zoomRatio)));
                 }
-                cbp.Add(new Point(cx, cy));
+                //cbp.Add(new Point(cx, cy));
 
                 dc.DrawPolygon(dirPen, cbp.ToArray());
 
@@ -286,7 +291,7 @@ namespace CameraPlugin
                     var paths = new List<List<IntPoint>>();
                     var path = new List<IntPoint>();
 
-                    path.Add(new IntPoint(cam.center.X * factor, cam.center.Y * factor));
+                    //path.Add(new IntPoint(cam.center.X * factor, cam.center.Y * factor));
                     path.AddRange((from i in cam.clippedBoundaryPoints select new IntPoint(i.X * factor, i.Y * factor)).Reverse());
                     
                     paths.Add(path);
@@ -420,15 +425,35 @@ namespace CameraPlugin
 
                 lvt.SubItems.Add(_name);
                 lvt.SubItems.Add(rooms[cam.Value.room.Id.ToString()].room.Name);
-                lvt.SubItems.Add((cam.Value.hAngle / Math.PI * 180).ToString("0") + "x" + (cam.Value.vAngle / Math.PI * 180).ToString("0"));
+                lvt.SubItems.Add((cam.Value.hAngle / Math.PI * 360).ToString("0") + "°," + (cam.Value.vAngle / Math.PI * 360).ToString("0") + "°" ) ;
                 lvt.SubItems.Add(CCTVCamera.GetElementCenter(cam.Value.camera).Z.ToString());
 
                 var t = cam.Value.clippedBoundaryPoints;
-                t.Add(new PointF(cam.Value.center.X, cam.Value.center.Y));
                 lvt.SubItems.Add(Area.calc(t.ToArray()).ToString());
+                lvt.SubItems.Add(cam.Value.sensorWidth + "x" + cam.Value.sensorHeight);
+                lvt.SubItems.Add(cam.Value.lens.ToString());
+
                 lvCameras.Items.Add(lvt);
                 
             }
+
+            txtHumanHeight.Text = CameraConfig.ReadSetting("HumanHeight");
+
+            if (document.DisplayUnitSystem == Autodesk.Revit.DB.DisplayUnit.IMPERIAL) unitConvert = 0.3048f;
+
+            lcs = CameraConfig.ReadSensors();
+            foreach (CameraConfig.SensorType cs in lcs)
+            {
+                (menuCamera.Items[0] as ToolStripMenuItem).DropDownItems.Add(cs.name);
+            }
+            (menuCamera.Items[0] as ToolStripMenuItem).DropDownItemClicked += menuSensor_ItemClicked;
+
+            lcl = CameraConfig.ReadLenses();
+            foreach (var ls in lcl)
+            {
+                (menuCamera.Items[1] as ToolStripMenuItem).DropDownItems.Add(ls.name);
+            }
+            (menuCamera.Items[1] as ToolStripMenuItem).DropDownItemClicked += menuLens_ItemClicked;
         }
 
         private void listRooms_SelectedIndexChanged(object sender, EventArgs e)
@@ -467,6 +492,8 @@ namespace CameraPlugin
 
             tbPan.Value = (int)(cameras[cid].cameraPan / Math.PI * 180);
             tbTilt.Value = (int)(cameras[cid].cameraTilt / Math.PI * 180);
+            //txtName.Text = cameras[cid].camera.ParametersMap.get_Item("camera_name").AsString();
+            
             curCamera = cid;
 
             if(checkBox2.Checked) movingPoint = Point.Empty;
@@ -497,15 +524,8 @@ namespace CameraPlugin
         private void btnEdit_Click(object sender, EventArgs e)
         {
             string cid = (lvCameras.SelectedItems[0].Text);
-            frmEdit frm = new frmEdit();
+            frmInput frm = new frmInput();
 
-            frm.setCamera(cameras[cid].camera.Id,
-                cameras[cid].camera.ParametersMap.get_Item("camera_name").AsString(),
-                cameras[cid].cameraPan / Math.PI * 180,
-                cameras[cid].cameraTilt / Math.PI * 180,
-                cameras[cid].camera.ParametersMap.get_Item("sensor_width").AsDouble(),
-                cameras[cid].camera.ParametersMap.get_Item("sensor_height").AsDouble(),
-                cameras[cid].camera.ParametersMap.get_Item("focal_length").AsDouble());
 
             frm.Show();
         }
@@ -581,11 +601,11 @@ namespace CameraPlugin
         private void updateCoverage()
         {
             var t = cameras[curCamera].clippedBoundaryPoints;
-            t.Add(new PointF(cameras[curCamera].center.X, cameras[curCamera].center.Y));
-            lvCameras.FindItemWithText(curCamera).SubItems[5].Text = Area.calc(t.ToArray()).ToString();
+            //t.Add(new PointF(cameras[curCamera].center.X, cameras[curCamera].center.Y));
+            lvCameras.FindItemWithText(curCamera).SubItems[cameraCoverage.Index].Text = Area.calc(t.ToArray()).ToString();
 
             string roomID = cameras[curCamera].room.Id.ToString();
-            lvRooms.FindItemWithText(roomID).SubItems[4].Text =
+            lvRooms.FindItemWithText(roomID).SubItems[roomCoverage.Index].Text =
                 (calcRoomCoverage(rooms[roomID]) / rooms[roomID].room.Area * 100).ToString("0") + "%";
         }
 
@@ -612,6 +632,94 @@ namespace CameraPlugin
         private void button1_Click(object sender, EventArgs e)
         {
         }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            //if (!cameras.ContainsKey(curCamera)) return;
+
+            //lvCameras.FindItemWithText(curCamera).SubItems[cameraName.Index].Text = txtName.Text;
+
+            //Autodesk.Revit.DB.Transaction trans = new Autodesk.Revit.DB.Transaction(document);
+            //trans.Start("Update camera's name");
+            //cameras[curCamera].camera.ParametersMap.get_Item("camera_name").Set(txtName.Text);
+            //trans.Commit();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            CameraConfig.SaveSetting("HumanHeight", txtHumanHeight.Text);
+        }
+
+        private void menuCamera_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ToolStripItem item = e.ClickedItem;
+            //MessageBox.Show(item.Text);
+        }
+
+        private void menuSensor_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (!cameras.ContainsKey(curCamera)) return;
+
+            ToolStripItem item = e.ClickedItem;
+            var r = lcs.Single(i => i.name == item.Text);
+
+            cameras[curCamera].sensorWidth = r.width;
+            cameras[curCamera].sensorHeight = r.height;
+            cameras[curCamera].updateCamera();
+            updateCoverage();
+
+            Autodesk.Revit.DB.Transaction trans = new Autodesk.Revit.DB.Transaction(document);
+            trans.Start("Update camera's sensor size");
+            cameras[curCamera].camera.ParametersMap.get_Item("sensor_width").Set(r.width);
+            cameras[curCamera].camera.ParametersMap.get_Item("sensor_height").Set(r.height);
+            trans.Commit();
+
+            picRooms.Invalidate();
+        }
+
+        private void menuLens_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (!cameras.ContainsKey(curCamera)) return;
+
+            ToolStripItem item = e.ClickedItem;
+            var r = lcl.Single(i => i.name == item.Text);
+
+            cameras[curCamera].lens = r.length;
+            cameras[curCamera].updateCamera();
+            updateCoverage();
+
+            Autodesk.Revit.DB.Transaction trans = new Autodesk.Revit.DB.Transaction(document);
+            trans.Start("Update camera's focal length");
+            cameras[curCamera].camera.ParametersMap.get_Item("focal_length").Set(r.length);
+            trans.Commit();
+
+            picRooms.Invalidate();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Button btnSender = (Button)sender;
+            Point ptLowerLeft = new Point(0, btnSender.Height);
+            ptLowerLeft = btnSender.PointToScreen(ptLowerLeft);
+            menuCamera.Show(ptLowerLeft);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!cameras.ContainsKey(curCamera)) return;
+
+            frmInput frm = new frmInput();
+            frm.askInput("Please enter a new name for the camera", 
+                cameras[curCamera].camera.ParametersMap.get_Item("camera_name").AsString());
+            frm.ShowDialog();
+
+            lvCameras.FindItemWithText(curCamera).SubItems[cameraName.Index].Text = frm.input;
+
+            Autodesk.Revit.DB.Transaction trans = new Autodesk.Revit.DB.Transaction(document);
+            trans.Start("Update camera's name");
+            cameras[curCamera].camera.ParametersMap.get_Item("camera_name").Set(frm.input);
+            trans.Commit();
+        }
     }
 
     public class CCTVCamera
@@ -627,10 +735,11 @@ namespace CameraPlugin
         public double nearDistance;
         public double farDistance;
 
-        public PointF rightNear;
-        public PointF rightFar;
-        public PointF leftNear;
-        public PointF leftFar;
+        public double humanHeight;
+
+        public double sensorWidth;
+        public double sensorHeight;
+        public double lens;
 
         public double baseAngle;
 
@@ -700,30 +809,39 @@ namespace CameraPlugin
 
                 cameraTilt = _camera.ParametersMap.get_Item("tilt").AsDouble();
 
+                sensorHeight = _camera.ParametersMap.get_Item("sensor_height").AsDouble();
+                sensorWidth = _camera.ParametersMap.get_Item("sensor_width").AsDouble();
+                lens = _camera.ParametersMap.get_Item("focal_length").AsDouble();
+
                 updateCamera();
             }
         }
 
         public void updateCamera()
         {
-            vAngle = Math.Atan(_camera.ParametersMap.get_Item("sensor_height").AsDouble() / _camera.ParametersMap.get_Item("focal_length").AsDouble() / 2);
-            hAngle = Math.Atan(_camera.ParametersMap.get_Item("sensor_width").AsDouble() / _camera.ParametersMap.get_Item("focal_length").AsDouble() / 2);
+            humanHeight = Double.Parse(CameraConfig.ReadSetting("HumanHeight")) * frmMain.unitConvert;
+
+            vAngle = Math.Atan(sensorHeight /lens / 2);
+            hAngle = Math.Atan(sensorWidth / lens / 2);
 
             double height = cameraCenter.Z - room.Level.Elevation;
 
-            nearDistance = height / Math.Tan(vAngle + cameraTilt);
-            farDistance = height / Math.Tan(cameraTilt - vAngle);
+            nearDistance = (height - humanHeight) / Math.Tan(vAngle + cameraTilt);
+            farDistance = (height - humanHeight) / Math.Tan(cameraTilt - vAngle);
 
-            rightNear = new PointF((float)(Math.Cos(cameraPan - hAngle) * nearDistance) + center.X,
-                (float)(Math.Sin(cameraPan - hAngle) * nearDistance) + center.Y);
+            //rightNear = new PointF((float)(Math.Cos(cameraPan - hAngle) * nearDistance) + center.X,
+            //    (float)(Math.Sin(cameraPan - hAngle) * nearDistance) + center.Y);
 
-            leftNear = new PointF((float)(Math.Cos(cameraPan + hAngle) * nearDistance) + center.X,
-                (float)(Math.Sin(cameraPan + hAngle) * nearDistance) + center.Y);
+            //leftNear = new PointF((float)(Math.Cos(cameraPan + hAngle) * nearDistance) + center.X,
+            //    (float)(Math.Sin(cameraPan + hAngle) * nearDistance) + center.Y);
             
             clippedBoundaryPoints = new List<PointF>();
+            var tmpPoints = new List<PointF>();
 
             int hAngleDegree = (int)(hAngle / Math.PI * 180);
             baseAngle = Math.PI * 2 - cameraPan;
+
+            bool evenFlag = true;
 
             for (double i = -hAngleDegree; i <= hAngleDegree; i += 0.5)
             {
@@ -743,10 +861,9 @@ namespace CameraPlugin
                         PointF l2End = bp[ib + 1];
                         double? d = lineIntersectionInfinity(center, new PointF((float)Math.Cos(aa), (float)Math.Sin(aa)), l2Start, l2End);
 
-                        if (d != null)
-                        {
-                            if (minDistance == -1 || d < minDistance)
-                                minDistance = (double)d;
+                        if (d != null && (minDistance == -1 || d < minDistance))
+                        { 
+                             minDistance = (double)d;
                         }
                     }
 
@@ -761,8 +878,25 @@ namespace CameraPlugin
                 {
                     clippedBoundaryPoints.Add(far);
                 }
+
+                evenFlag = !evenFlag;
+                if (!evenFlag) continue;
+
+                if (minDistance < nd)
+                {
+                    tmpPoints.Add(new PointF(
+                        (float)(cameraCenter.X + minDistance * Math.Cos(aa)),
+                        (float)(cameraCenter.Y + minDistance * Math.Sin(aa)))
+                        );
+                }
+                else
+                {
+                    tmpPoints.Add(near);
+                }
             }
 
+            tmpPoints.Reverse();
+            clippedBoundaryPoints.AddRange(tmpPoints);
         }
 
         public static Autodesk.Revit.DB.XYZ GetElementCenter(Autodesk.Revit.DB.Element elem)
