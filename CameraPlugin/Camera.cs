@@ -8,6 +8,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using System.Windows.Media.Imaging;
 using System.Reflection;
+using Autodesk.Revit.UI.Selection;
 
 namespace CameraPlugin
 {
@@ -116,7 +117,27 @@ namespace CameraPlugin
                 }
             }
 
-            frm.ShowDialog();
+            Selection selection = uiDocument.Selection;
+
+            if (0 == selection.GetElementIds().Count)
+            {
+                frm.ShowDialog();
+            }
+            else
+            {
+                foreach (ElementId elem in selection.GetElementIds())
+                {
+                    Element tmp = doc.GetElement(elem);
+                    if (tmp.Name == "camera")
+                    {
+                        frm.selectCamera(tmp.Id.ToString());
+                        frm.ShowDialog();
+                        break;
+                    }
+                }
+
+            }
+            
 
 
             return Autodesk.Revit.UI.Result.Succeeded;

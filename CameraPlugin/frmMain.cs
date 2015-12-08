@@ -28,6 +28,7 @@ namespace CameraPlugin
 
         public float zoomRatio = 1;
         public float globalShift = 0;
+        public int globalFactor = 1000000;
 
         public static float unitConvert = 1;
 
@@ -65,6 +66,36 @@ namespace CameraPlugin
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+        }
+
+        private void drawCameraIcon(ref Graphics g, ref Pen p, ref CCTVCamera cam, ref CCTVRoom r)
+        {
+            
+            double angle = cam.cameraPan + Math.PI / 2;
+            var b = cam.camera.get_BoundingBox(null);
+            var _b = b.Max - b.Min;
+            double a = Math.Sqrt(_b.X * _b.X + _b.Y * _b.Y) * r.zoomRatioX / 2;
+
+            PointF[] pts =
+            {
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 3 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 3 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 3 * 2 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 3 * 2 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 3 * 4 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 3 * 4 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 2 * 2.9 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 2 * 2.9 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * 1.5 * Math.Cos(Math.PI / 3 * 4.2 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * 1.5 * Math.Sin(Math.PI / 3 * 4.2 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * 1.5 * Math.Cos(Math.PI / 3 * 4.8 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * 1.5 * Math.Sin(Math.PI / 3 * 4.8 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 2 * 3.1 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 2 * 3.1 + angle))),
+                new PointF((float)(cam.center.X * r.zoomRatioX + a * Math.Cos(Math.PI / 3 * 5 + angle)),
+                           (float)(cam.center.Y * r.zoomRatioY + a * Math.Sin(Math.PI / 3 * 5 + angle))),
+            };
+            g.FillPolygon(Brushes.Blue, pts);
         }
 
         private void refreshRoom(CCTVRoom r, PaintEventArgs e)
@@ -126,7 +157,8 @@ namespace CameraPlugin
                 {
                     
                     int cx = (int)(cam.cameraCenter.X * r.zoomRatioX), cy = (int)(cam.cameraCenter.Y * r.zoomRatioY);
-                    dc.DrawEllipse(cameraPen, new Rectangle(cx - 5, cy - 5, 10, 10));
+                    //dc.DrawEllipse(cameraPen, new Rectangle(cx - 5, cy - 5, 10, 10));
+                    drawCameraIcon(ref dc, ref cameraPen, ref cam, ref r);
 
                     List<Point> cbp = new List<Point>();
                     foreach (PointF pf in cam.clippedBoundaryPoints)
@@ -205,7 +237,10 @@ namespace CameraPlugin
                 foreach (var dr in r.Value.doors)
                 {
                     var loc = dr.Location as Autodesk.Revit.DB.LocationPoint;
-                    var d = dr.get_BoundingBox(null).Max - dr.get_BoundingBox(null).Min;
+                    var d = dr.get_BoundingBox(null)?.Max - dr.get_BoundingBox(null)?.Min;
+
+                    if (d == null || loc == null) continue;
+
                     var radius = (float)Math.Sqrt(d.X * d.X + d.Y * d.Y) * zoomRatio / 2;
 
                     Brush br;
@@ -281,7 +316,7 @@ namespace CameraPlugin
             double ret = 0.0;
             var output = new List<List<IntPoint>>();
             Clipper c = new Clipper();
-            int factor = 1000000;
+            int factor = globalFactor;
 
             foreach (var _cam in cameras)
             {
@@ -392,7 +427,7 @@ namespace CameraPlugin
             {
                 ListViewItem lvt = new ListViewItem(room.Key);
                 lvt.SubItems.Add(room.Value.room.Name);
-                lvt.SubItems.Add(room.Value.room.Level.Elevation.ToString());
+                lvt.SubItems.Add(room.Value.room.Level.Elevation.ToString("0.00"));
 
                 double area = room.Value.room.Area;
                 lvt.SubItems.Add(area.ToString("0.000"));
@@ -407,6 +442,8 @@ namespace CameraPlugin
                     _min = _min == null ? b.Min : Area.min(_min, b.Min);
                 }
             }
+
+            lvRooms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             double dy = _max.Y - _min.Y;
             double dx = _max.X - _min.X;
@@ -426,18 +463,21 @@ namespace CameraPlugin
                 lvt.SubItems.Add(_name);
                 lvt.SubItems.Add(rooms[cam.Value.room.Id.ToString()].room.Name);
                 lvt.SubItems.Add((cam.Value.hAngle / Math.PI * 360).ToString("0") + "°," + (cam.Value.vAngle / Math.PI * 360).ToString("0") + "°" ) ;
-                lvt.SubItems.Add(CCTVCamera.GetElementCenter(cam.Value.camera).Z.ToString());
+                lvt.SubItems.Add(CCTVCamera.GetElementCenter(cam.Value.camera).Z.ToString("0.00"));
 
                 var t = cam.Value.clippedBoundaryPoints;
-                lvt.SubItems.Add(Area.calc(t.ToArray()).ToString());
+                lvt.SubItems.Add(Area.calc(t.ToArray()).ToString("0.00"));
                 lvt.SubItems.Add(cam.Value.sensorWidth + "x" + cam.Value.sensorHeight);
-                lvt.SubItems.Add(cam.Value.lens.ToString());
+                lvt.SubItems.Add(cam.Value.lens.ToString("0.0"));
 
-                lvCameras.Items.Add(lvt);
-                
+                lvCameras.Items.Add(lvt);   
             }
 
+            lvCameras.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+
             txtHumanHeight.Text = CameraConfig.ReadSetting("HumanHeight");
+            txtFactor.Text = CameraConfig.ReadSetting("Factor");
+            globalFactor = int.Parse(txtFactor.Text);
 
             if (document.DisplayUnitSystem == Autodesk.Revit.DB.DisplayUnit.IMPERIAL) unitConvert = 0.3048f;
 
@@ -488,16 +528,21 @@ namespace CameraPlugin
         private void lvCameras_DoubleClick(object sender, EventArgs e)
         {
             string cid = (lvCameras.SelectedItems[0].Text);
+            selectCamera(cid);
+
+            if (checkBox2.Checked) movingPoint = Point.Empty;
+            picRooms.Invalidate();
+        }
+
+        public void selectCamera(string cid)
+        {
             curRoom = cameras[cid].room.Id.ToString();
 
             tbPan.Value = (int)(cameras[cid].cameraPan / Math.PI * 180);
             tbTilt.Value = (int)(cameras[cid].cameraTilt / Math.PI * 180);
-            //txtName.Text = cameras[cid].camera.ParametersMap.get_Item("camera_name").AsString();
-            
-            curCamera = cid;
 
-            if(checkBox2.Checked) movingPoint = Point.Empty;
-            picRooms.Invalidate();
+            curCamera = cid;
+            lblCamera.Text = "Selected: " + cid;
         }
 
         private void tbPan_Scroll(object sender, EventArgs e)
@@ -648,6 +693,7 @@ namespace CameraPlugin
         private void btnSave_Click(object sender, EventArgs e)
         {
             CameraConfig.SaveSetting("HumanHeight", txtHumanHeight.Text);
+            CameraConfig.SaveSetting("Factor", txtFactor.Text);
         }
 
         private void menuCamera_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -674,6 +720,8 @@ namespace CameraPlugin
             cameras[curCamera].camera.ParametersMap.get_Item("sensor_height").Set(r.height);
             trans.Commit();
 
+            lvCameras.FindItemWithText(curCamera).SubItems[cameraSensor.Index].Text = r.width.ToString("0.0") + "x" + r.height.ToString("0.0");
+
             picRooms.Invalidate();
         }
 
@@ -693,6 +741,8 @@ namespace CameraPlugin
             cameras[curCamera].camera.ParametersMap.get_Item("focal_length").Set(r.length);
             trans.Commit();
 
+            lvCameras.FindItemWithText(curCamera).SubItems[cameraSensor.Index].Text = r.length.ToString("0");
+
             picRooms.Invalidate();
         }
 
@@ -706,10 +756,20 @@ namespace CameraPlugin
 
         private void button2_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void frmMain_ResizeEnd(object sender, EventArgs e)
+        {
+            tabControl1.Width = this.Width - tabControl1.Left - 20;
+        }
+
+        private void editNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             if (!cameras.ContainsKey(curCamera)) return;
 
             frmInput frm = new frmInput();
-            frm.askInput("Please enter a new name for the camera", 
+            frm.askInput("Please enter a new name for the camera",
                 cameras[curCamera].camera.ParametersMap.get_Item("camera_name").AsString());
             frm.ShowDialog();
 
@@ -819,7 +879,7 @@ namespace CameraPlugin
 
         public void updateCamera()
         {
-            humanHeight = Double.Parse(CameraConfig.ReadSetting("HumanHeight")) * frmMain.unitConvert;
+            humanHeight = Double.Parse(CameraConfig.ReadSetting("HumanHeight")) / frmMain.unitConvert;
 
             vAngle = Math.Atan(sensorHeight /lens / 2);
             hAngle = Math.Atan(sensorWidth / lens / 2);
