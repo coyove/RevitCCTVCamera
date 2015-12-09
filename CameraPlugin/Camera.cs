@@ -9,6 +9,7 @@ using Autodesk.Revit.DB.Architecture;
 using System.Windows.Media.Imaging;
 using System.Reflection;
 using Autodesk.Revit.UI.Selection;
+using System.IO;
 
 namespace CameraPlugin
 {
@@ -28,9 +29,10 @@ namespace CameraPlugin
             
             pushButton.ToolTip = "List all cameras inside current document";
 
-            Uri uriImage = new Uri(@"D:\trade\haha.jpg");
+            Uri uriImage = new Uri(Path.GetDirectoryName(thisAssemblyPath) + "/Resources/icon.png");
             BitmapImage largeImage = new BitmapImage(uriImage);
             pushButton.LargeImage = largeImage;
+            
 
             return Result.Succeeded;
         }

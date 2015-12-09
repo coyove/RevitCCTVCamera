@@ -487,7 +487,7 @@
             // 
             // txtFactor
             // 
-            this.txtFactor.Location = new System.Drawing.Point(239, 313);
+            this.txtFactor.Location = new System.Drawing.Point(240, 325);
             this.txtFactor.Name = "txtFactor";
             this.txtFactor.Size = new System.Drawing.Size(121, 25);
             this.txtFactor.TabIndex = 28;
@@ -587,7 +587,7 @@
             // 
             this.pictureBox3.BackgroundImage = global::CameraPlugin.Properties.Resources.clipper_sample;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(3, 216);
+            this.pictureBox3.Location = new System.Drawing.Point(4, 228);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(96, 90);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -611,7 +611,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(119, 230);
+            this.label8.Location = new System.Drawing.Point(106, 247);
             this.label8.MaximumSize = new System.Drawing.Size(350, 60);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(319, 60);
@@ -622,7 +622,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(170, 316);
+            this.label9.Location = new System.Drawing.Point(171, 328);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(63, 15);
             this.label9.TabIndex = 37;
