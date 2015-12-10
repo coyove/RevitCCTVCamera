@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RevitAddIns>
-        <AddIn Type="Command">
+        <AddIn Type="Application">
+                <Name>CCTV Camera</Name>
                 <Assembly>D:\BIM\CameraPlugin\CameraPlugin\bin\Debug\CameraPlugin.dll</Assembly>
-                <AddInId>239BD853-36E4-461f-9171-C5ACEDA4E721</AddInId>
-                <FullClassName>CameraPlugin.Class1</FullClassName>
+                <AddInId>604b1052-f742-4951-8576-c261d1993108</AddInId>
+                <FullClassName>CameraPlugin.Camera</FullClassName>
                 <Text>CameraPlugin</Text> 
                 <VendorId>NAME</VendorId>
                 <VendorDescription>Your Company Information</VendorDescription> 
