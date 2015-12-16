@@ -188,16 +188,27 @@ namespace CameraPlugin
                     {
                         cbp.Add(new Point((int)(pf.X * r.zoomRatioX), (int)(pf.Y * r.zoomRatioY)));
                     }
-                    //cbp.Add(new Point(cx, cy));
 
                     dc.DrawPolygon(dirPen, cbp.ToArray());
 
                     Brush brush = new SolidBrush(Color.FromArgb(120, 0, 255, 0));
                     Brush brush2 = new SolidBrush(Color.FromArgb(120, 0, 128, 255));
 
-                    dc.FillPolygon(brush, cbp.ToArray()); 
-                    //dc.FillPolygon(brush2, new Point[] { new Point(cx, cy), cam.rightNear, cam.leftNear, new Point(cx, cy) });
-      
+                    dc.FillPolygon(brush, cbp.ToArray());
+                    if(cam.sweetPoint != PointF.Empty)
+                    {
+                        dc.DrawLine(dirPen, new PointF(cam.sweetPoint.X * r.zoomRatioX, cam.sweetPoint.Y * r.zoomRatioY),
+                            new PointF(cx, cy));
+                        dc.DrawLine(dirPen,
+                            new PointF(
+                                (cam.sweetPoint.X + (float)(unitConvert * Math.Cos(cam.baseAngle + Math.PI / 2))) * r.zoomRatioX,
+                                (cam.sweetPoint.Y + (float)(unitConvert * Math.Sin(cam.baseAngle + Math.PI / 2))) * r.zoomRatioY),
+                            new PointF(
+                                (cam.sweetPoint.X + (float)(unitConvert * Math.Cos(cam.baseAngle - Math.PI / 2))) * r.zoomRatioX,
+                                (cam.sweetPoint.Y + (float)(unitConvert * Math.Sin(cam.baseAngle - Math.PI / 2))) * r.zoomRatioY)
+                                );
+                    }
+
                     string _name = cam.camera.ParametersMap.get_Item("camera_name").AsString();
                     if(_name != null)
                     {
@@ -921,13 +932,8 @@ namespace CameraPlugin
 
         public double baseAngle;
 
-        //public int zoomRatioX;
-        //public int zoomRatioY;
-        //public float initShift;
-
-        //public IList<Autodesk.Revit.DB.BoundarySegment> ibs;
         public List<List<PointF>> boundaryPoints;
-        public List<PointF> clippedBoundaryPointsNear;
+        public PointF sweetPoint;
         public List<PointF> clippedBoundaryPoints;
 
         private Autodesk.Revit.DB.Architecture.Room _room;
@@ -1003,10 +1009,10 @@ namespace CameraPlugin
             vAngle = Math.Atan(sensorHeight /lens / 2);
             hAngle = Math.Atan(sensorWidth / lens / 2);
 
-            double height = cameraCenter.Z - room.Level.Elevation;
+            double height = cameraCenter.Z - room.Level.Elevation - humanHeight;
 
-            nearDistance = (height - humanHeight) / Math.Tan(vAngle + cameraTilt);
-            farDistance = (height - humanHeight) / Math.Tan(cameraTilt - vAngle);
+            nearDistance = (height) / Math.Tan(vAngle + cameraTilt);
+            farDistance = (height ) / Math.Tan(cameraTilt - vAngle);
 
             //rightNear = new PointF((float)(Math.Cos(cameraPan - hAngle) * nearDistance) + center.X,
             //    (float)(Math.Sin(cameraPan - hAngle) * nearDistance) + center.Y);
@@ -1015,12 +1021,21 @@ namespace CameraPlugin
             //    (float)(Math.Sin(cameraPan + hAngle) * nearDistance) + center.Y);
             
             clippedBoundaryPoints = new List<PointF>();
+            //clippedBoundaryPointsVisible = new List<PointF>();
             var tmpPoints = new List<PointF>();
 
             int hAngleDegree = (int)(hAngle / Math.PI * 180);
             baseAngle = Math.PI * 2 - cameraPan;
 
             bool evenFlag = true;
+
+            double L = (0.125 * humanHeight * lens) / (sensorHeight * 20 / 480);
+            if (L <= farDistance)
+                sweetPoint = new PointF(
+                    (float)(cameraCenter.X + L * Math.Cos(baseAngle)),
+                    (float)(cameraCenter.Y + L * Math.Sin(baseAngle)));
+            else
+                sweetPoint = PointF.Empty;
 
             for (double i = -hAngleDegree; i <= hAngleDegree; i += 0.5)
             {
@@ -1056,7 +1071,7 @@ namespace CameraPlugin
                 else
                 {
                     clippedBoundaryPoints.Add(far);
-                }
+                }                
 
                 evenFlag = !evenFlag;
                 if (!evenFlag) continue;
@@ -1076,6 +1091,8 @@ namespace CameraPlugin
 
             tmpPoints.Reverse();
             clippedBoundaryPoints.AddRange(tmpPoints);
+
+            //if (clippedBoundaryPointsVisible.Count > 0) clippedBoundaryPointsVisible.AddRange(tmpPoints);
         }
 
         public static Autodesk.Revit.DB.XYZ GetElementCenter(Autodesk.Revit.DB.Element elem)
