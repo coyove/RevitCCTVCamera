@@ -32,6 +32,13 @@ namespace CameraPlugin
             public double length;
         }
 
+        public class ResolutionType
+        {
+            public string name;
+            public int width;
+            public int height;
+        }
+
         public static string ReadSetting(string key)
         {
 
@@ -99,6 +106,37 @@ namespace CameraPlugin
                     var tmp = new LensType();
                     tmp.name = n.Attributes["name"].Value;
                     tmp.length = double.Parse(n.Attributes["length"].Value);
+
+                    ret.Add(tmp);
+                }
+            }
+
+            return ret;
+
+        }
+
+        public static List<ResolutionType> ReadResolutions()
+        {
+
+            XmlDocument doc = new XmlDocument();
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/settings.config";
+
+            if (File.Exists(path))
+            {
+                doc.Load(path);
+            }
+
+            List<ResolutionType> ret = new List<ResolutionType>();
+
+            XmlNode node = doc.DocumentElement.SelectSingleNode("/configuration");
+            foreach (XmlNode n in node.ChildNodes)
+            {
+                if (n.Name == "resolution")
+                {
+                    var tmp = new ResolutionType();
+                    tmp.name = n.Attributes["name"].Value;
+                    tmp.width = int.Parse(n.Attributes["width"].Value);
+                    tmp.height = int.Parse(n.Attributes["height"].Value);
 
                     ret.Add(tmp);
                 }

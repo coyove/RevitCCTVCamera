@@ -44,6 +44,7 @@ namespace CameraPlugin
 
         private List<CameraConfig.SensorType> lcs;
         private List<CameraConfig.LensType> lcl;
+        private List<CameraConfig.ResolutionType> lcr;
 
         public void addCamera(Autodesk.Revit.DB.Architecture.Room r, Autodesk.Revit.DB.Element e)
         {
@@ -520,6 +521,7 @@ namespace CameraPlugin
                 lvt.SubItems.Add(Area.calc(t.ToArray()).ToString("0.00"));
                 lvt.SubItems.Add(cam.Value.sensorWidth + "x" + cam.Value.sensorHeight);
                 lvt.SubItems.Add(cam.Value.lens.ToString("0.0"));
+                lvt.SubItems.Add(cam.Value.sensorPixelWidth + "x" + cam.Value.sensorPixelHeight);
 
                 lvCameras.Items.Add(lvt);   
             }
@@ -528,17 +530,18 @@ namespace CameraPlugin
 
             lcs = CameraConfig.ReadSensors();
             foreach (CameraConfig.SensorType cs in lcs)
-            {
                 (menuCamera.Items[0] as ToolStripMenuItem).DropDownItems.Add(cs.name);
-            }
             (menuCamera.Items[0] as ToolStripMenuItem).DropDownItemClicked += menuSensor_ItemClicked;
 
             lcl = CameraConfig.ReadLenses();
             foreach (var ls in lcl)
-            {
                 (menuCamera.Items[1] as ToolStripMenuItem).DropDownItems.Add(ls.name);
-            }
             (menuCamera.Items[1] as ToolStripMenuItem).DropDownItemClicked += menuLens_ItemClicked;
+
+            lcr = CameraConfig.ReadResolutions();
+            foreach(var lr in lcr)
+                (menuCamera.Items[2] as ToolStripMenuItem).DropDownItems.Add(lr.name + " (" + lr.width + "×" + lr.height + ")");
+            (menuCamera.Items[2] as ToolStripMenuItem).DropDownItemClicked += menuResolution_ItemClicked;
 
             log("Load " + lcs.Count + " sensor profiles");
             log("Load " + lcl.Count + " lens profiles");
@@ -809,6 +812,31 @@ namespace CameraPlugin
             picRooms.Invalidate();
         }
 
+        private void menuResolution_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (!cameras.ContainsKey(curCamera)) return;
+
+            ToolStripItem item = e.ClickedItem;
+            string _name = item.Text.Split(' ')[0];
+            var r = lcr.Single(i => i.name == _name);
+
+            cameras[curCamera].sensorPixelWidth = r.width;
+            cameras[curCamera].sensorPixelHeight = r.height;
+            cameras[curCamera].updateCamera();
+            updateCoverage();
+
+            Autodesk.Revit.DB.Transaction trans = new Autodesk.Revit.DB.Transaction(document);
+            trans.Start("Update camera's focal length");
+            cameras[curCamera].camera.ParametersMap.get_Item("pixel_width").Set(r.width);
+            cameras[curCamera].camera.ParametersMap.get_Item("pixel_height").Set(r.height);
+            trans.Commit();
+
+            lvCameras.FindItemWithText(curCamera).SubItems[cameraResolution.Index].Text = 
+                cameras[curCamera].sensorPixelWidth + "x" + cameras[curCamera].sensorPixelHeight;
+
+            picRooms.Invalidate();
+        }
+
         private void button1_Click_1(object sender, EventArgs e)
         {
             Button btnSender = (Button)sender;
@@ -930,6 +958,9 @@ namespace CameraPlugin
         public double sensorHeight;
         public double lens;
 
+        public int sensorPixelWidth;
+        public int sensorPixelHeight;
+
         public double baseAngle;
 
         public List<List<PointF>> boundaryPoints;
@@ -997,6 +1028,9 @@ namespace CameraPlugin
                 sensorWidth = _camera.ParametersMap.get_Item("sensor_width").AsDouble();
                 lens = _camera.ParametersMap.get_Item("focal_length").AsDouble();
 
+                sensorPixelWidth = _camera.ParametersMap.get_Item("pixel_width").AsInteger();
+                sensorPixelHeight = _camera.ParametersMap.get_Item("pixel_height").AsInteger();
+
                 updateCamera();
             }
         }
@@ -1029,7 +1063,9 @@ namespace CameraPlugin
 
             bool evenFlag = true;
 
-            double L = (0.125 * humanHeight * lens) / (sensorHeight * 20 / 480);
+            double L = (0.125 * humanHeight * lens) / (sensorHeight * 20 / sensorPixelHeight);
+            L = L * Math.Cos(cameraTilt);
+
             if (L <= farDistance)
                 sweetPoint = new PointF(
                     (float)(cameraCenter.X + L * Math.Cos(baseAngle)),

@@ -32,6 +32,7 @@
             this.txtDebug = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.txtSearchRoom = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.lvRooms = new System.Windows.Forms.ListView();
@@ -41,6 +42,7 @@
             this.roomArea = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.roomCoverage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtSearchCamera = new System.Windows.Forms.TextBox();
             this.lblCamera = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -64,6 +66,10 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.txtInfo = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.chkHuman = new System.Windows.Forms.CheckBox();
             this.chkWindows = new System.Windows.Forms.CheckBox();
             this.chkDoors = new System.Windows.Forms.CheckBox();
@@ -76,26 +82,22 @@
             this.menuCamera = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.chooseSensor = new System.Windows.Forms.ToolStripMenuItem();
             this.chooseLensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chooseResolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label7 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.picRooms = new System.Windows.Forms.PictureBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.cameraResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbTilt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPan)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.menuCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.menuCamera.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picRooms)).BeginInit();
             this.SuspendLayout();
             // 
@@ -132,6 +134,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Room";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImage = global::CameraPlugin.Properties.Resources.search;
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox2.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox2.TabIndex = 29;
+            this.pictureBox2.TabStop = false;
             // 
             // txtSearchRoom
             // 
@@ -216,6 +228,16 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Camera";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::CameraPlugin.Properties.Resources.search;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox1.TabIndex = 28;
+            this.pictureBox1.TabStop = false;
             // 
             // txtSearchCamera
             // 
@@ -333,7 +355,8 @@
             this.cameraEv,
             this.cameraCoverage,
             this.cameraSensor,
-            this.cameraLens});
+            this.cameraLens,
+            this.cameraResolution});
             this.lvCameras.FullRowSelect = true;
             this.lvCameras.GridLines = true;
             this.lvCameras.Location = new System.Drawing.Point(6, 37);
@@ -421,6 +444,46 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Settings";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(171, 328);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(63, 15);
+            this.label9.TabIndex = 37;
+            this.label9.Text = "Factor:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(106, 247);
+            this.label8.MaximumSize = new System.Drawing.Size(350, 60);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(319, 60);
+            this.label8.TabIndex = 36;
+            this.label8.Text = "This program uses Clipper Library to calculate the coverage. Increasing the Facto" +
+    "r could produce more accurate results.\r\n";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.BackgroundImage = global::CameraPlugin.Properties.Resources.clipper_sample;
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox3.Location = new System.Drawing.Point(4, 228);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(96, 90);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox3.TabIndex = 35;
+            this.pictureBox3.TabStop = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 12);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(127, 15);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "Camera Settings";
             // 
             // chkHuman
             // 
@@ -524,75 +587,42 @@
             this.menuCamera.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chooseSensor,
             this.chooseLensToolStripMenuItem,
+            this.chooseResolutionToolStripMenuItem,
             this.toolStripSeparator1,
             this.editNameToolStripMenuItem});
             this.menuCamera.Name = "contextMenuStrip1";
-            this.menuCamera.Size = new System.Drawing.Size(194, 88);
+            this.menuCamera.Size = new System.Drawing.Size(222, 114);
             this.menuCamera.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuCamera_ItemClicked);
             // 
             // chooseSensor
             // 
             this.chooseSensor.Name = "chooseSensor";
-            this.chooseSensor.Size = new System.Drawing.Size(193, 26);
+            this.chooseSensor.Size = new System.Drawing.Size(221, 26);
             this.chooseSensor.Text = "Choose Sensor";
             // 
             // chooseLensToolStripMenuItem
             // 
             this.chooseLensToolStripMenuItem.Name = "chooseLensToolStripMenuItem";
-            this.chooseLensToolStripMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.chooseLensToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.chooseLensToolStripMenuItem.Text = "Choose Lens";
+            // 
+            // chooseResolutionToolStripMenuItem
+            // 
+            this.chooseResolutionToolStripMenuItem.Name = "chooseResolutionToolStripMenuItem";
+            this.chooseResolutionToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.chooseResolutionToolStripMenuItem.Text = "Choose Resolution";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
             // 
             // editNameToolStripMenuItem
             // 
             this.editNameToolStripMenuItem.Name = "editNameToolStripMenuItem";
-            this.editNameToolStripMenuItem.Size = new System.Drawing.Size(193, 26);
+            this.editNameToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.editNameToolStripMenuItem.Text = "Edit Name";
             this.editNameToolStripMenuItem.Click += new System.EventHandler(this.editNameToolStripMenuItem_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 12);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(127, 15);
-            this.label7.TabIndex = 34;
-            this.label7.Text = "Camera Settings";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImage = global::CameraPlugin.Properties.Resources.search;
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox2.TabIndex = 29;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::CameraPlugin.Properties.Resources.search;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox1.TabIndex = 28;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = global::CameraPlugin.Properties.Resources.clipper_sample;
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(4, 228);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(96, 90);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox3.TabIndex = 35;
-            this.pictureBox3.TabStop = false;
             // 
             // picRooms
             // 
@@ -608,25 +638,9 @@
             this.picRooms.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseMove);
             this.picRooms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseUp);
             // 
-            // label8
+            // cameraResolution
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(106, 247);
-            this.label8.MaximumSize = new System.Drawing.Size(350, 60);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(319, 60);
-            this.label8.TabIndex = 36;
-            this.label8.Text = "This program uses Clipper Library to calculate the coverage. Increasing the Facto" +
-    "r could produce more accurate results.\r\n";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(171, 328);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(63, 15);
-            this.label9.TabIndex = 37;
-            this.label9.Text = "Factor:";
+            this.cameraResolution.Text = "Resolution";
             // 
             // frmMain
             // 
@@ -646,18 +660,18 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbTilt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPan)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.menuCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.menuCamera.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picRooms)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -721,5 +735,7 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolStripMenuItem chooseResolutionToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader cameraResolution;
     }
 }
