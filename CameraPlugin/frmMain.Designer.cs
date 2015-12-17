@@ -32,15 +32,15 @@
             this.txtDebug = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.txtSearchRoom = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.lvRooms = new System.Windows.Forms.ListView();
             this.colID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.roomArea = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.roomCoverage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.txtSearchRoom = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtSearchCamera = new System.Windows.Forms.TextBox();
@@ -63,9 +63,12 @@
             this.cameraCoverage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cameraSensor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cameraLens = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cameraResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.txtInfo = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.txtHumanPixel = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -86,7 +89,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picRooms = new System.Windows.Forms.PictureBox();
-            this.cameraResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -123,10 +125,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lvRooms);
             this.tabPage1.Controls.Add(this.pictureBox2);
             this.tabPage1.Controls.Add(this.txtSearchRoom);
             this.tabPage1.Controls.Add(this.checkBox1);
-            this.tabPage1.Controls.Add(this.lvRooms);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -134,6 +136,47 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Room";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lvRooms
+            // 
+            this.lvRooms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colID,
+            this.colName,
+            this.colLevel,
+            this.roomArea,
+            this.roomCoverage});
+            this.lvRooms.FullRowSelect = true;
+            this.lvRooms.GridLines = true;
+            this.lvRooms.Location = new System.Drawing.Point(6, 37);
+            this.lvRooms.Name = "lvRooms";
+            this.lvRooms.Size = new System.Drawing.Size(432, 428);
+            this.lvRooms.TabIndex = 4;
+            this.lvRooms.UseCompatibleStateImageBehavior = false;
+            this.lvRooms.View = System.Windows.Forms.View.Details;
+            this.lvRooms.SelectedIndexChanged += new System.EventHandler(this.lvRooms_SelectedIndexChanged_1);
+            this.lvRooms.DoubleClick += new System.EventHandler(this.lvRooms_DoubleClick);
+            // 
+            // colID
+            // 
+            this.colID.Text = "Room ID";
+            this.colID.Width = 100;
+            // 
+            // colName
+            // 
+            this.colName.Text = "Name";
+            this.colName.Width = 100;
+            // 
+            // colLevel
+            // 
+            this.colLevel.Text = "Ev.";
+            // 
+            // roomArea
+            // 
+            this.roomArea.Text = "Area";
+            // 
+            // roomCoverage
+            // 
+            this.roomCoverage.Text = "Coverage";
             // 
             // pictureBox2
             // 
@@ -164,47 +207,6 @@
             this.checkBox1.Text = "Display all rooms";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // lvRooms
-            // 
-            this.lvRooms.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colID,
-            this.colName,
-            this.colLevel,
-            this.roomArea,
-            this.roomCoverage});
-            this.lvRooms.FullRowSelect = true;
-            this.lvRooms.GridLines = true;
-            this.lvRooms.Location = new System.Drawing.Point(6, 62);
-            this.lvRooms.Name = "lvRooms";
-            this.lvRooms.Size = new System.Drawing.Size(432, 403);
-            this.lvRooms.TabIndex = 4;
-            this.lvRooms.UseCompatibleStateImageBehavior = false;
-            this.lvRooms.View = System.Windows.Forms.View.Details;
-            this.lvRooms.SelectedIndexChanged += new System.EventHandler(this.lvRooms_SelectedIndexChanged_1);
-            this.lvRooms.DoubleClick += new System.EventHandler(this.lvRooms_DoubleClick);
-            // 
-            // colID
-            // 
-            this.colID.Text = "Room ID";
-            this.colID.Width = 100;
-            // 
-            // colName
-            // 
-            this.colName.Text = "Name";
-            this.colName.Width = 100;
-            // 
-            // colLevel
-            // 
-            this.colLevel.Text = "Ev.";
-            // 
-            // roomArea
-            // 
-            this.roomArea.Text = "Area";
-            // 
-            // roomCoverage
-            // 
-            this.roomCoverage.Text = "Coverage";
             // 
             // tabPage2
             // 
@@ -401,6 +403,10 @@
             // 
             this.cameraLens.Text = "Lens";
             // 
+            // cameraResolution
+            // 
+            this.cameraResolution.Text = "Resolution";
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.txtInfo);
@@ -424,6 +430,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.txtHumanPixel);
+            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.pictureBox3);
@@ -445,10 +453,26 @@
             this.tabPage3.Text = "Settings";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // txtHumanPixel
+            // 
+            this.txtHumanPixel.Location = new System.Drawing.Point(323, 167);
+            this.txtHumanPixel.Name = "txtHumanPixel";
+            this.txtHumanPixel.Size = new System.Drawing.Size(83, 25);
+            this.txtHumanPixel.TabIndex = 39;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 170);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(311, 15);
+            this.label10.TabIndex = 38;
+            this.label10.Text = "Minimal recognizable face height (px):";
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(171, 328);
+            this.label9.Location = new System.Drawing.Point(171, 375);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(63, 15);
             this.label9.TabIndex = 37;
@@ -457,7 +481,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(106, 247);
+            this.label8.Location = new System.Drawing.Point(106, 294);
             this.label8.MaximumSize = new System.Drawing.Size(350, 60);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(319, 60);
@@ -469,7 +493,7 @@
             // 
             this.pictureBox3.BackgroundImage = global::CameraPlugin.Properties.Resources.clipper_sample;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(4, 228);
+            this.pictureBox3.Location = new System.Drawing.Point(4, 275);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(96, 90);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -550,7 +574,7 @@
             // 
             // txtFactor
             // 
-            this.txtFactor.Location = new System.Drawing.Point(240, 325);
+            this.txtFactor.Location = new System.Drawing.Point(240, 372);
             this.txtFactor.Name = "txtFactor";
             this.txtFactor.Size = new System.Drawing.Size(121, 25);
             this.txtFactor.TabIndex = 28;
@@ -558,7 +582,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 198);
+            this.label6.Location = new System.Drawing.Point(6, 245);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(127, 15);
             this.label6.TabIndex = 27;
@@ -578,7 +602,7 @@
             // 
             this.txtHumanHeight.Location = new System.Drawing.Point(252, 37);
             this.txtHumanHeight.Name = "txtHumanHeight";
-            this.txtHumanHeight.Size = new System.Drawing.Size(80, 25);
+            this.txtHumanHeight.Size = new System.Drawing.Size(83, 25);
             this.txtHumanHeight.TabIndex = 25;
             // 
             // menuCamera
@@ -637,10 +661,6 @@
             this.picRooms.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseDown);
             this.picRooms.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseMove);
             this.picRooms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseUp);
-            // 
-            // cameraResolution
-            // 
-            this.cameraResolution.Text = "Resolution";
             // 
             // frmMain
             // 
@@ -737,5 +757,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolStripMenuItem chooseResolutionToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader cameraResolution;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtHumanPixel;
     }
 }

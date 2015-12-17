@@ -31,6 +31,7 @@ namespace CameraPlugin
         public int globalFactor = 1000000;
 
         public static float unitConvert = 1;
+        public static int minFacePixel;
 
         public static Autodesk.Revit.DB.Document document;
         public static Dictionary<string, List<Autodesk.Revit.DB.ElementId>> idCouple;
@@ -133,47 +134,70 @@ namespace CameraPlugin
             dc.SmoothingMode = SmoothingMode.AntiAlias;
             dc.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-            Pen myPen = new Pen(Color.Black);
-            myPen.Width = 2;
+            Pen myPen = new Pen(Color.Black, 2);
+            Pen otherPen = new Pen(Color.Gray);
 
-            foreach(var dp in r.drawablePoints)
+            foreach (var _r in rooms)
             {
-                dc.DrawLines(myPen, dp);
-            }
-            dc.DrawString(r.room.Name + "(" + r.zoomRatioX.ToString("0.0") + "x)", 
-                drawFont, Brushes.Black, 0, (float)r.Height / 2 * r.zoomRatioX, sfc);
+                if (!_r.Value.validRoom) continue;
+                if (_r.Value.room.LevelId != r.room.LevelId) continue;
 
-            foreach (var dr in r.doors)
-            {
-                var loc = dr.Location as Autodesk.Revit.DB.LocationPoint;
-                var d = dr.get_BoundingBox(null)?.Max - dr.get_BoundingBox(null)?.Min;
-                if (d == null || loc == null) continue;
-
-                var radius = (float)Math.Sqrt(d.X * d.X + d.Y * d.Y) * r.zoomRatioX / 2;
-
-                Brush br;
-                if (dr.Category.Id.IntegerValue == (int)Autodesk.Revit.DB.BuiltInCategory.OST_Doors)
+                foreach (var dp in _r.Value.boundaryPoints)
                 {
-                    if (!displayDoors) continue;
-                    br = new SolidBrush(Color.FromArgb(80, 255, 0, 0));
-                }
-                else
-                {
-                    if (!displayWindows) continue;
-                    br = new SolidBrush(Color.FromArgb(120, 255, 255, 0));
+                    Point[] dpa = (from i in dp select new Point((int)(i.X * r.zoomRatioX), (int)(i.Y * r.zoomRatioY))).ToArray();
+                    if (_r.Value.Equals(r))
+                    {
+                        dc.DrawLines(myPen, dpa);
+                        //dc.FillPolygon(Brushes.LightGray, dpa);
+                    }
+                    else
+                        dc.DrawLines(otherPen, dpa);
                 }
 
-                dc.FillEllipse(br, (float)loc.Point.X * r.zoomRatioX - radius / 2,
-                    (float)loc.Point.Y * r.zoomRatioY - radius / 2, radius, radius);
+                if(_r.Value.Equals(r) && r.room.Name != "")
+                {
+                    SizeF stringSize = e.Graphics.MeasureString(r.room.Name, drawFont);
+                    dc.FillRectangle(Brushes.Black, r.center.X * r.zoomRatioX + 10, 
+                        r.center.Y * r.zoomRatioY - stringSize.Height / 2, stringSize.Width, stringSize.Height);
+                    dc.DrawString(r.room.Name, drawFont, Brushes.White, r.center.X * r.zoomRatioX + 10, r.center.Y * r.zoomRatioY, sf);
+                }
 
-                dc.DrawString(dr.Name, drawFont, new SolidBrush(Color.FromArgb(120, 0, 0, 0)), 
-                    (float)loc.Point.X * r.zoomRatioX, (float)loc.Point.Y * r.zoomRatioY, sfc);
+                foreach (var dr in _r.Value.doors)
+                {
+                    var loc = dr.Location as Autodesk.Revit.DB.LocationPoint;
+                    var d = dr.get_BoundingBox(null)?.Max - dr.get_BoundingBox(null)?.Min;
+
+                    if (d == null || loc == null) continue;
+
+                    var radius = (float)Math.Sqrt(d.X * d.X + d.Y * d.Y) * r.zoomRatioX / 2;
+
+                    Brush br;
+                    if (dr.Category.Id.IntegerValue == (int)Autodesk.Revit.DB.BuiltInCategory.OST_Doors)
+                    {
+                        if (!displayDoors) continue;
+                        br = new SolidBrush(Color.FromArgb(20, 255, 0, 0));
+                    }
+                    else
+                    {
+                        if (!displayWindows) continue;
+                        br = new SolidBrush(Color.FromArgb(20, 255, 255, 0));
+                    }
+
+                    float[] dashValues = { 5, 2, 15, 4 };
+                    Pen doorPen = new Pen(Color.Black, 1);
+                    doorPen.DashPattern = dashValues;
+
+                    dc.DrawEllipse(doorPen, (float)loc.Point.X * r.zoomRatioX - radius / 2,
+                        (float)loc.Point.Y * r.zoomRatioY - radius / 2, radius, radius);
+                    dc.FillEllipse(br, (float)loc.Point.X * r.zoomRatioX - radius / 2,
+                        (float)loc.Point.Y * r.zoomRatioY - radius / 2, radius, radius);
+                    dc.DrawString(dr.Name, new Font("Tahoma", radius / 10), new SolidBrush(Color.FromArgb(120, 0, 0, 0)),
+                        (float)loc.Point.X * r.zoomRatioX, (float)loc.Point.Y * r.zoomRatioY, sfc);
+                }
             }
 
-            Pen cameraPen = new Pen(Color.Blue);
-            cameraPen.Width = 2;
-            Pen dirPen = new Pen(Color.DarkGreen);
-            dirPen.Width = 2;
+            Pen cameraPen = new Pen(Color.Blue, 2);
+            Pen dirPen = new Pen(Color.DarkGreen, 2);
 
             foreach (var c in cameras)
             {
@@ -214,7 +238,6 @@ namespace CameraPlugin
                     if(_name != null)
                     {
                         SizeF stringSize = e.Graphics.MeasureString(_name, drawFont);
-
                         dc.DrawRectangle(Pens.Black, cx + 10, cy - stringSize.Height / 2, stringSize.Width, stringSize.Height);
 
                         if (cam.camera.Id.ToString() == curCamera)
@@ -547,6 +570,7 @@ namespace CameraPlugin
             log("Load " + lcl.Count + " lens profiles");
 
             txtHumanHeight.Text = CameraConfig.ReadSetting("HumanHeight");
+            txtHumanPixel.Text = CameraConfig.ReadSetting("MinFacePixel");
             txtFactor.Text = CameraConfig.ReadSetting("Factor");
             chkDoors.Checked = displayDoors = Boolean.Parse(CameraConfig.ReadSetting("DisplayDoors"));
             chkWindows.Checked = displayWindows = Boolean.Parse(CameraConfig.ReadSetting("DisplayWindows"));
@@ -555,6 +579,7 @@ namespace CameraPlugin
             chkHuman.Checked = humanView = Boolean.Parse(CameraConfig.ReadSetting("HumanView"));
 
             globalFactor = int.Parse(txtFactor.Text);
+            minFacePixel = int.Parse(txtHumanPixel.Text);
         }
 
         private void listRooms_SelectedIndexChanged(object sender, EventArgs e)
@@ -754,6 +779,7 @@ namespace CameraPlugin
         private void btnSave_Click(object sender, EventArgs e)
         {
             CameraConfig.SaveSetting("HumanHeight", txtHumanHeight.Text);
+            CameraConfig.SaveSetting("MinFacePixel", txtHumanPixel.Text);
             CameraConfig.SaveSetting("HumanView", chkHuman.Checked.ToString());
             CameraConfig.SaveSetting("Factor", txtFactor.Text);
             CameraConfig.SaveSetting("DisplayDoors", chkDoors.Checked.ToString());
@@ -1063,7 +1089,7 @@ namespace CameraPlugin
 
             bool evenFlag = true;
 
-            double L = (0.125 * humanHeight * lens) / (sensorHeight * 20 / sensorPixelHeight);
+            double L = (0.125 * humanHeight * lens) / (sensorHeight * frmMain.minFacePixel / sensorPixelHeight);
             L = L * Math.Cos(cameraTilt);
 
             if (L <= farDistance)
@@ -1194,6 +1220,8 @@ namespace CameraPlugin
         public double Height;
         public float initShift;
 
+        public PointF center;
+
         public bool validRoom;
         public List<List<PointF>> boundaryPoints;
         public List<Point[]> drawablePoints;
@@ -1227,6 +1255,8 @@ namespace CameraPlugin
 
                 Width = dx;
                 Height = dy;
+
+                center = new PointF((float)(b.Max.X + b.Min.X) / 2, (float)(b.Max.Y + b.Min.Y) / 2);
 
                 zoomRatioX = (int)(500 / dw / 1.5);
                 zoomRatioY = -zoomRatioX;
