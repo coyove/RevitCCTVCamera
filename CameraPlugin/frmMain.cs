@@ -623,7 +623,7 @@ namespace CameraPlugin
         public void selectCamera(string cid)
         {
             curRoom = cameras[cid].room.Id.ToString();
-
+            
             tbPan.Value = (int)(cameras[cid].cameraPan / Math.PI * 180);
             tbTilt.Value = (int)(cameras[cid].cameraTilt / Math.PI * 180);
 
@@ -986,8 +986,11 @@ namespace CameraPlugin
 
         public int sensorPixelWidth;
         public int sensorPixelHeight;
+        public int minFacePixel;
 
         public double baseAngle;
+
+        public double unitConvert;
 
         public List<List<PointF>> boundaryPoints;
         public PointF sweetPoint;
@@ -1040,9 +1043,6 @@ namespace CameraPlugin
 
                 Autodesk.Revit.DB.FamilyInstance tmp = _camera as Autodesk.Revit.DB.FamilyInstance;
                 Autodesk.Revit.DB.LocationPoint loc = tmp.Location as Autodesk.Revit.DB.LocationPoint;
-                //cameraPan = tmp.GetTransform().BasisX.AngleOnPlaneTo(
-                //    new Autodesk.Revit.DB.XYZ(1, 0, 0),
-                //    tmp.GetTransform().BasisZ) + Math.PI / 2;
 
                 cameraPan = 2 * Math.PI - loc.Rotation + Math.PI / 2;
                 while (cameraPan >= 2 * Math.PI) cameraPan -= 2 * Math.PI;
@@ -1056,6 +1056,9 @@ namespace CameraPlugin
 
                 sensorPixelWidth = _camera.ParametersMap.get_Item("pixel_width").AsInteger();
                 sensorPixelHeight = _camera.ParametersMap.get_Item("pixel_height").AsInteger();
+                minFacePixel = int.Parse(CameraConfig.ReadSetting("MinFacePixel"));
+
+                unitConvert = (_Camera._doc_.DisplayUnitSystem == Autodesk.Revit.DB.DisplayUnit.IMPERIAL) ? 0.3048f : 1;
 
                 updateCamera();
             }
@@ -1064,7 +1067,7 @@ namespace CameraPlugin
         public void updateCamera()
         {
             humanHeight = Boolean.Parse(CameraConfig.ReadSetting("HumanView")) ?
-                Double.Parse(CameraConfig.ReadSetting("HumanHeight")) / frmMain.unitConvert : 0;
+                Double.Parse(CameraConfig.ReadSetting("HumanHeight")) / unitConvert : 0;
 
             vAngle = Math.Atan(sensorHeight /lens / 2);
             hAngle = Math.Atan(sensorWidth / lens / 2);
@@ -1089,7 +1092,7 @@ namespace CameraPlugin
 
             bool evenFlag = true;
 
-            double L = (0.125 * humanHeight * lens) / (sensorHeight * frmMain.minFacePixel / sensorPixelHeight);
+            double L = (0.125 * humanHeight * lens) / (sensorHeight * minFacePixel / sensorPixelHeight);
             L = L * Math.Cos(cameraTilt);
 
             if (L <= farDistance)

@@ -70,8 +70,6 @@
             this.txtHumanPixel = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkHuman = new System.Windows.Forms.CheckBox();
             this.chkWindows = new System.Windows.Forms.CheckBox();
@@ -79,7 +77,6 @@
             this.chkFancy = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.txtFactor = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.txtHumanHeight = new System.Windows.Forms.TextBox();
             this.menuCamera = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -89,6 +86,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.picRooms = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -98,7 +96,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbPan)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.menuCamera.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picRooms)).BeginInit();
             this.SuspendLayout();
@@ -430,11 +427,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.txtHumanPixel);
             this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.label9);
-            this.tabPage3.Controls.Add(this.label8);
-            this.tabPage3.Controls.Add(this.pictureBox3);
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.chkHuman);
             this.tabPage3.Controls.Add(this.chkWindows);
@@ -442,7 +438,6 @@
             this.tabPage3.Controls.Add(this.chkFancy);
             this.tabPage3.Controls.Add(this.checkBox2);
             this.tabPage3.Controls.Add(this.txtFactor);
-            this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.btnSave);
             this.tabPage3.Controls.Add(this.txtHumanHeight);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
@@ -455,7 +450,7 @@
             // 
             // txtHumanPixel
             // 
-            this.txtHumanPixel.Location = new System.Drawing.Point(323, 167);
+            this.txtHumanPixel.Location = new System.Drawing.Point(323, 190);
             this.txtHumanPixel.Name = "txtHumanPixel";
             this.txtHumanPixel.Size = new System.Drawing.Size(83, 25);
             this.txtHumanPixel.TabIndex = 39;
@@ -463,7 +458,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 170);
+            this.label10.Location = new System.Drawing.Point(6, 193);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(311, 15);
             this.label10.TabIndex = 38;
@@ -472,33 +467,11 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(171, 375);
+            this.label9.Location = new System.Drawing.Point(6, 224);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(63, 15);
+            this.label9.Size = new System.Drawing.Size(255, 15);
             this.label9.TabIndex = 37;
-            this.label9.Text = "Factor:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(106, 294);
-            this.label8.MaximumSize = new System.Drawing.Size(350, 60);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(319, 60);
-            this.label8.TabIndex = 36;
-            this.label8.Text = "This program uses Clipper Library to calculate the coverage. Increasing the Facto" +
-    "r could produce more accurate results.\r\n";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = global::CameraPlugin.Properties.Resources.clipper_sample;
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(4, 275);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(96, 90);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox3.TabIndex = 35;
-            this.pictureBox3.TabStop = false;
+            this.label9.Text = "Clipper library amplify factor:";
             // 
             // label7
             // 
@@ -514,7 +487,7 @@
             this.chkHuman.AutoSize = true;
             this.chkHuman.Checked = true;
             this.chkHuman.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkHuman.Location = new System.Drawing.Point(9, 39);
+            this.chkHuman.Location = new System.Drawing.Point(5, 252);
             this.chkHuman.Name = "chkHuman";
             this.chkHuman.Size = new System.Drawing.Size(237, 19);
             this.chkHuman.TabIndex = 33;
@@ -526,7 +499,7 @@
             this.chkWindows.AutoSize = true;
             this.chkWindows.Checked = true;
             this.chkWindows.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkWindows.Location = new System.Drawing.Point(9, 139);
+            this.chkWindows.Location = new System.Drawing.Point(9, 117);
             this.chkWindows.Name = "chkWindows";
             this.chkWindows.Size = new System.Drawing.Size(149, 19);
             this.chkWindows.TabIndex = 32;
@@ -539,7 +512,7 @@
             this.chkDoors.AutoSize = true;
             this.chkDoors.Checked = true;
             this.chkDoors.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDoors.Location = new System.Drawing.Point(9, 114);
+            this.chkDoors.Location = new System.Drawing.Point(9, 92);
             this.chkDoors.Name = "chkDoors";
             this.chkDoors.Size = new System.Drawing.Size(133, 19);
             this.chkDoors.TabIndex = 31;
@@ -552,7 +525,7 @@
             this.chkFancy.AutoSize = true;
             this.chkFancy.Checked = true;
             this.chkFancy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkFancy.Location = new System.Drawing.Point(9, 89);
+            this.chkFancy.Location = new System.Drawing.Point(9, 67);
             this.chkFancy.Name = "chkFancy";
             this.chkFancy.Size = new System.Drawing.Size(173, 19);
             this.chkFancy.TabIndex = 30;
@@ -565,7 +538,7 @@
             this.checkBox2.AutoSize = true;
             this.checkBox2.Checked = true;
             this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(9, 64);
+            this.checkBox2.Location = new System.Drawing.Point(9, 42);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(381, 19);
             this.checkBox2.TabIndex = 29;
@@ -574,19 +547,10 @@
             // 
             // txtFactor
             // 
-            this.txtFactor.Location = new System.Drawing.Point(240, 372);
+            this.txtFactor.Location = new System.Drawing.Point(323, 221);
             this.txtFactor.Name = "txtFactor";
-            this.txtFactor.Size = new System.Drawing.Size(121, 25);
+            this.txtFactor.Size = new System.Drawing.Size(83, 25);
             this.txtFactor.TabIndex = 28;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 245);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(127, 15);
-            this.label6.TabIndex = 27;
-            this.label6.Text = "Clipper Library";
             // 
             // btnSave
             // 
@@ -600,7 +564,7 @@
             // 
             // txtHumanHeight
             // 
-            this.txtHumanHeight.Location = new System.Drawing.Point(252, 37);
+            this.txtHumanHeight.Location = new System.Drawing.Point(323, 252);
             this.txtHumanHeight.Name = "txtHumanHeight";
             this.txtHumanHeight.Size = new System.Drawing.Size(83, 25);
             this.txtHumanHeight.TabIndex = 25;
@@ -615,36 +579,36 @@
             this.toolStripSeparator1,
             this.editNameToolStripMenuItem});
             this.menuCamera.Name = "contextMenuStrip1";
-            this.menuCamera.Size = new System.Drawing.Size(222, 114);
+            this.menuCamera.Size = new System.Drawing.Size(216, 106);
             this.menuCamera.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuCamera_ItemClicked);
             // 
             // chooseSensor
             // 
             this.chooseSensor.Name = "chooseSensor";
-            this.chooseSensor.Size = new System.Drawing.Size(221, 26);
+            this.chooseSensor.Size = new System.Drawing.Size(215, 24);
             this.chooseSensor.Text = "Choose Sensor";
             // 
             // chooseLensToolStripMenuItem
             // 
             this.chooseLensToolStripMenuItem.Name = "chooseLensToolStripMenuItem";
-            this.chooseLensToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.chooseLensToolStripMenuItem.Size = new System.Drawing.Size(215, 24);
             this.chooseLensToolStripMenuItem.Text = "Choose Lens";
             // 
             // chooseResolutionToolStripMenuItem
             // 
             this.chooseResolutionToolStripMenuItem.Name = "chooseResolutionToolStripMenuItem";
-            this.chooseResolutionToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.chooseResolutionToolStripMenuItem.Size = new System.Drawing.Size(215, 24);
             this.chooseResolutionToolStripMenuItem.Text = "Choose Resolution";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(218, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
             // 
             // editNameToolStripMenuItem
             // 
             this.editNameToolStripMenuItem.Name = "editNameToolStripMenuItem";
-            this.editNameToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
+            this.editNameToolStripMenuItem.Size = new System.Drawing.Size(215, 24);
             this.editNameToolStripMenuItem.Text = "Edit Name";
             this.editNameToolStripMenuItem.Click += new System.EventHandler(this.editNameToolStripMenuItem_Click);
             // 
@@ -661,6 +625,15 @@
             this.picRooms.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseDown);
             this.picRooms.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseMove);
             this.picRooms.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picRooms_MouseUp);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(5, 162);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(167, 15);
+            this.label6.TabIndex = 40;
+            this.label6.Text = "Calculation Settings";
             // 
             // frmMain
             // 
@@ -690,7 +663,6 @@
             this.tabPage4.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.menuCamera.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picRooms)).EndInit();
             this.ResumeLayout(false);
@@ -736,7 +708,6 @@
         private System.Windows.Forms.ColumnHeader cameraLens;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox txtFactor;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem editNameToolStripMenuItem;
         private System.Windows.Forms.Label lblCamera;
@@ -752,12 +723,11 @@
         private System.Windows.Forms.CheckBox chkWindows;
         private System.Windows.Forms.CheckBox chkHuman;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolStripMenuItem chooseResolutionToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader cameraResolution;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtHumanPixel;
+        private System.Windows.Forms.Label label6;
     }
 }

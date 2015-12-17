@@ -47,6 +47,8 @@ namespace CameraPlugin
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     public class _Camera : IExternalCommand
     {
+        public static Document _doc_;
+
         public Autodesk.Revit.UI.Result Execute(ExternalCommandData revit,
            ref string message, ElementSet elements)
         {
@@ -70,7 +72,7 @@ namespace CameraPlugin
             string ret = "";
 
             frmMain frm = new frmMain();
-            frmMain.document = doc;
+            frmMain.document = _doc_ = doc;
 
             FilteredElementCollector doors = new FilteredElementCollector(doc);
             FilteredElementCollector windows = new FilteredElementCollector(doc);
